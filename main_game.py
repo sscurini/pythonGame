@@ -1,6 +1,5 @@
 from heroes import Heroes
 from monsters import Monsters
-from os import system
 
 def getUserName():
     username = input()
@@ -9,8 +8,8 @@ def getUserName():
 #Program starting point "Welcome"
 print("Please Enter your name: ")
 playersUsername = getUserName()
-system('clear')
-print("Welcome to the awesome battle text game")
+print(" ")
+print("Welcome to the super awesome monster battle text based game")
 print(" ")
 print("Hello " + playersUsername)
 print(" ")
@@ -20,35 +19,50 @@ def determineHeroAttack():
     attackType = input()
     return attackType
 
+def calculateDamage(attacKDamage,totalDamage,totalHealthPoints):
+    totalDamage += attacKDamage
+    totalHealthPoints = totalHealthPoints - totalDamage
+    return totalHealthPoints
+
+def printRemaininghealth(playersUsername,heroTotalHealthPoints,monsterTotalHealthPoints):
+    print (playersUsername + "'s" + " remaining health: " + str(heroTotalHealthPoints))
+    print ("Monster's remaining health: " + str(monsterTotalHealthPoints))
+
 def main():
     #Setup monter and hero
     hero = Heroes(playersUsername)
     monster = Monsters()
     
     #Both the hero and monster start with 100 health point
-    monsterStartingHealthPoints = monster.healthPoints
-    heroStartingHealthPoints = hero.healthPoints
-    print("Players Health: " + str(heroStartingHealthPoints))
-    print("Monters Health " + str(monsterStartingHealthPoints))
+    monsterTotalHealthPoints = monster.healthPoints
+    heroTotalHealthPoints = hero.healthPoints
+    print(playersUsername + "'s" + " Health: " + str(heroTotalHealthPoints))
+    print("Monter's Health " + str(monsterTotalHealthPoints))
 
     #Battle Logic
-    heroAttackType = determineHeroAttack()
-    if heroAttackType == "1":
-        heroAttacKDamage = hero.meleeAttack()
+    heroTotalDamage = 0
+    monsterTotaldamage = 0
+    while heroTotalHealthPoints | monsterTotalHealthPoints > 0:
+        heroAttackType = determineHeroAttack()
         monsterAttackDamage = monster.attack()
-        print("Hero HIts for: " + str(heroAttacKDamage))
-        print("Monster Hits for: " + str(monsterAttackDamage))
-        
-    
-    elif heroAttackType == "2":
-        heroAttacKDamage = hero.rangedAttack()
-        monsterAttackDamage = monster.attack()
-        print("Hero HIts for: " + str(heroAttacKDamage))
-        print("Monster Hits for: " + str(monsterAttackDamage))
-   
-    heroTotalHealthPoints = heroStartingHealthPoints - monsterAttackDamage
-    monsterTotalHealthPoints = monsterStartingHealthPoints - heroAttacKDamage
-    print ("Heros remaining health: " + str(heroTotalHealthPoints))
-    print ("Monsters remaining health: " + str(monsterTotalHealthPoints))
+        if heroAttackType == "1":
+            heroAttacKDamage = hero.meleeAttack()
+            print(playersUsername + " Hits for: " + str(heroAttacKDamage))
+            print("Monster Hits for: " + str(monsterAttackDamage))
+            heroTotalHealthPoints    = calculateDamage(monsterAttackDamage,monsterTotaldamage,heroTotalHealthPoints)
+            monsterTotalHealthPoints = calculateDamage(heroAttacKDamage,heroTotalDamage,monsterTotalHealthPoints)
+            printRemaininghealth(playersUsername,heroTotalHealthPoints,monsterTotalHealthPoints)
 
+        elif heroAttackType == "2":
+            heroAttacKDamage = hero.rangedAttack()
+            print(playersUsername + " Hits for: " + str(heroAttacKDamage))
+            print("Monster Hits for: " + str(monsterAttackDamage))
+            heroTotalHealthPoints    = calculateDamage(monsterAttackDamage,monsterTotaldamage,heroTotalHealthPoints)
+            monsterTotalHealthPoints = calculateDamage(heroAttacKDamage,heroTotalDamage,monsterTotalHealthPoints)
+            printRemaininghealth(playersUsername,heroTotalHealthPoints,monsterTotalHealthPoints)
+
+    if monsterTotalHealthPoints <= 0:
+        print("Congratulations " + playersUsername + ". You killed the monster.")
+    else:         
+        print("You Died. Game Over")
 main()
