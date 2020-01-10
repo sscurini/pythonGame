@@ -6,9 +6,8 @@ class Heroes:
         self.name = name
         self.healthPoints = healthPoints
         
-    
     def rangedAttack(self):
-       attackHit = random.randint(20,31)
+       attackHit = random.randint(20,41)
        return attackHit
     
     def meleeAttack(self):
