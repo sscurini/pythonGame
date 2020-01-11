@@ -28,7 +28,7 @@ def printRemaininghealth(playersUsername,heroTotalHealthPoints,monsterTotalHealt
     print (playersUsername + "'s" + " remaining health: " + str(heroTotalHealthPoints))
     print ("Monster's remaining health: " + str(monsterTotalHealthPoints))
 
-def main():
+def battle():
     #Setup monter and hero
     hero = Heroes(playersUsername)
     monster = Monsters()
@@ -36,33 +36,37 @@ def main():
     #Both the hero and monster start with 100 health point
     monsterTotalHealthPoints = monster.healthPoints
     heroTotalHealthPoints = hero.healthPoints
-    print(playersUsername + "'s" + " Health: " + str(heroTotalHealthPoints))
+    print(hero.name + "'s" + " Health: " + str(heroTotalHealthPoints))
     print("Monter's Health " + str(monsterTotalHealthPoints))
 
     #Battle Logic
     heroTotalDamage = 0
     monsterTotaldamage = 0
-    while heroTotalHealthPoints | monsterTotalHealthPoints > 0:
+    while (heroTotalHealthPoints > 0) & (monsterTotalHealthPoints > 0):
         heroAttackType = determineHeroAttack()
         monsterAttackDamage = monster.attack()
         if heroAttackType == "1":
             heroAttacKDamage = hero.meleeAttack()
-            print(playersUsername + " Hits for: " + str(heroAttacKDamage))
+            print(hero.name + " Hits for: " + str(heroAttacKDamage))
             print("Monster Hits for: " + str(monsterAttackDamage))
             heroTotalHealthPoints    = calculateDamage(monsterAttackDamage,monsterTotaldamage,heroTotalHealthPoints)
             monsterTotalHealthPoints = calculateDamage(heroAttacKDamage,heroTotalDamage,monsterTotalHealthPoints)
-            printRemaininghealth(playersUsername,heroTotalHealthPoints,monsterTotalHealthPoints)
+            printRemaininghealth(hero.name,heroTotalHealthPoints,monsterTotalHealthPoints)
 
         elif heroAttackType == "2":
             heroAttacKDamage = hero.rangedAttack()
-            print(playersUsername + " Hits for: " + str(heroAttacKDamage))
+            print(hero.name + " Hits for: " + str(heroAttacKDamage))
             print("Monster Hits for: " + str(monsterAttackDamage))
             heroTotalHealthPoints    = calculateDamage(monsterAttackDamage,monsterTotaldamage,heroTotalHealthPoints)
             monsterTotalHealthPoints = calculateDamage(heroAttacKDamage,heroTotalDamage,monsterTotalHealthPoints)
-            printRemaininghealth(playersUsername,heroTotalHealthPoints,monsterTotalHealthPoints)
+            printRemaininghealth(hero.name,heroTotalHealthPoints,monsterTotalHealthPoints)
+        else:
+            print("Please enter a valid attack")
 
-    if monsterTotalHealthPoints <= 0:
-        print("Congratulations " + playersUsername + ". You killed the monster.")
-    else:         
+    if (monsterTotalHealthPoints <= 0) & (heroTotalHealthPoints <= 0):
+        print(hero.name + ", you killed the monster but also died. Nice Try. Game Over")
+    elif monsterTotalHealthPoints <= 0:
+        print("Congratulations " + hero.name + ". You killed the monster. You win")
+    elif heroTotalHealthPoints <= 0 :         
         print("You Died. Game Over")
-main()
+battle()
